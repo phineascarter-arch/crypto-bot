@@ -1,0 +1,26 @@
+name: Daily Crypto Report
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天台灣早上 8 點自動執行
+  workflow_dispatch:    # 允許我們手動點擊測試
+
+jobs:
+  build_and_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. 取得最新程式碼
+        uses: actions/checkout@v3
+
+      - name: 2. 建立 Python 無塵室
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 3. 安裝依賴套件
+        run: pip install -r requirements.txt
+
+      - name: 4. 執行主程式並注入保險箱金鑰
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python main.py
