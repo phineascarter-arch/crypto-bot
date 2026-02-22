@@ -16,7 +16,7 @@ if not WEBHOOK_URL or not GEMINI_API_KEY:
 # 🧠 初始化 AI 大腦
 genai.configure(api_key=GEMINI_API_KEY)
 # 使用最新的輕量級模型，速度快且免費額度高
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 coins = ['bitcoin', 'ethereum']
 df_list = [] 
