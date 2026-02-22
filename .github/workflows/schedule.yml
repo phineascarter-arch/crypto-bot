@@ -22,5 +22,8 @@ jobs:
 
       - name: 4. 執行主程式並注入保險箱金鑰
         env:
+         - name: 4. 執行主程式並注入保險箱金鑰
+        env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}  # 👈 這是你加的新指令
         run: python main.py
