@@ -2,28 +2,28 @@ name: Daily Crypto Report
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 每天台灣早上 8 點自動執行
-  workflow_dispatch:    # 允許我們手動點擊測試
+    # 每天 UTC 00:00 (台灣早上 08:00) 自動執行
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允許我們隨時手動點擊「Run workflow」測試
 
 jobs:
   build_and_report:
     runs-on: ubuntu-latest
     steps:
       - name: 1. 取得最新程式碼
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        
       - name: 2. 建立 Python 無塵室
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
-      - name: 3. 安裝依賴套件
+          
+      - name: 3. 安裝依賴套件 (Pandas, Seaborn, Gemini AI 等)
         run: pip install -r requirements.txt
-
-      - name: 4. 執行主程式並注入保險箱金鑰
+        
+      - name: 4. 執行主程式並注入雙重保險箱金鑰
         env:
-         - name: 4. 執行主程式並注入保險箱金鑰
-        env:
+          # 把 GitHub Secrets 的密碼，交給 Python 的 os.getenv() 使用
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}  # 👈 這是你加的新指令
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
