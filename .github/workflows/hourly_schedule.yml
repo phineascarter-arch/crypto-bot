@@ -1,0 +1,29 @@
+name: Hourly Price Alert
+
+on:
+  schedule:
+    # Cron 語法：分 時 日 月 星期。 "0 * * * *" 代表「每個小時的第 0 分鐘」自動執行
+    - cron: '0 * * * *'
+  workflow_dispatch: # 一樣保留手動測試按鈕
+
+jobs:
+  quick_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. 取得最新程式碼
+        uses: actions/checkout@v4
+        
+      - name: 2. 建立 Python 輕量無塵室
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: 3. 安裝基礎套件 (只需要 requests)
+        run: pip install requests
+        
+      - name: 4. 執行整點快報程式
+        env:
+          # 只需要給它 Discord 鑰匙，它不需要 AI 鑰匙
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        # 這裡指定執行新的 hourly_report.py
+        run: python hourly_report.py
